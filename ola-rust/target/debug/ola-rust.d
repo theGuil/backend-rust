@@ -1,0 +1,1 @@
+C:\Users\guilh\OneDrive\Documentos\projetos\ geral\ vscode\backend-rust\ola-rust\target\debug\ola-rust.exe: C:\Users\guilh\OneDrive\Documentos\projetos\ geral\ vscode\backend-rust\ola-rust\src\main.rs
