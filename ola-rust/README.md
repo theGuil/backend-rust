@@ -23,7 +23,7 @@ aplicativo do servidor onda segura
 
 git init
 git add .
-git commit -m ":sparkles: feat: Adiciona model para cadastrar parametros da análise"
+git commit -m ":tada: start: Start Rust"
 git push -u origin main
 
 ########################################### .ENV WHATSAPP ############################################
