@@ -24,7 +24,7 @@ aplicativo do servidor onda segura
 git init
 git add .
 git commit -m ":tada: start: Start Rust"
-git push -u origin main
+git push -u origin producao
 
 ########################################### .ENV WHATSAPP ############################################
 
