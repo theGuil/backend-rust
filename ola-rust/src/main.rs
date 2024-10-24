@@ -16,6 +16,8 @@ struct User {
     age: u32,
 }
 
+
+
 // Handler para a rota /user
 async fn get_user() -> Json<User> {
     let user = User {
@@ -47,7 +49,7 @@ async fn main() {
         .route("/user/register", get(post_user));
 
     // Define o endereço
-    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    let addr = SocketAddr::from(([127, 0, 0, 1], 4000));
     println!("Server running on http://{}", addr);
 
     // Cria o listener
