@@ -1,16 +1,59 @@
-enum Resultado {
-    Sucesso(i32),
+use axum::{
+    routing::get,
+    Router,
+    Json,
+};
+use serde::{Deserialize, Serialize};
+use std::net::SocketAddr;
+use tokio::net::TcpListener;  // Adicionado esta linha
 
+// Define a estrutura do usuário
+#[derive(Serialize, Deserialize)]
+struct User {
+    id: u32,
+    name: String,
+    email: String,
+    age: u32,
 }
 
-fn processar() -> Resultado {
-    // Simulando um processamento que retorna um resultado
-    Resultado::Sucesso(200)
+// Handler para a rota /user
+async fn get_user() -> Json<User> {
+    let user = User {
+        id: 1,
+        name: String::from("João Silva"),
+        email: String::from("joao@email.com"),
+        age: 30,
+    };
+
+    Json(user)
 }
 
-fn main() {
-    match processar() {
-        Resultado::Sucesso(codigo) => println!("Sucesso com código: {}", codigo),
-        
-    }
+async fn post_user() -> Json<User> {
+    let user = User {
+        id: 1,
+        name: String::from("João Silva"),
+        email: String::from("joao@email.com"),
+        age: 30,
+    };
+
+    Json(user)
+}
+
+#[tokio::main]
+async fn main() {
+    // Cria as rotas
+    let app = Router::new()
+        .route("/user", get(get_user))
+        .route("/user/register", get(post_user));
+
+    // Define o endereço
+    let addr = SocketAddr::from(([127, 0, 0, 1], 3000));
+    println!("Server running on http://{}", addr);
+
+    // Cria o listener
+    let listener = TcpListener::bind(addr).await.unwrap();
+    println!("Listening on {}", addr);
+
+    // Inicia o servidor
+    axum::serve(listener, app).await.unwrap();  // Mudou esta linha
 }
