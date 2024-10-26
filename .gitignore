@@ -1,0 +1,15 @@
+# Diretório de compilação
+/target/
+
+# Arquivo de lock do Cargo
+Cargo.lock
+
+# Arquivos gerados pelo rustfmt
+**/*.rs.bk
+
+# Arquivos de configuração do IDE
+.idea/
+.vscode/
+
+# Arquivos de debug
+*.pdb
