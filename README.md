@@ -23,7 +23,7 @@ aplicativo do servidor onda segura
 
 git init
 git add .
-git commit -m ":tada: start: Start Rust"
+git commit -m ":sparkles: feat: Adiciona servidor rust funcionando no padrão MVC"
 git push -u origin producao
 
 ########################################### .ENV WHATSAPP ############################################
