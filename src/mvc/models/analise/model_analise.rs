@@ -18,7 +18,7 @@ pub struct CreateAnalise {
 
 impl Analise {
     pub fn new(payload: CreateAnalise) -> Self {
-        let now = chrono::Local::now();
+        let now: chrono::DateTime<chrono::Local> = chrono::Local::now();
         
         Self {
             id: Uuid::new_v4().to_string(),

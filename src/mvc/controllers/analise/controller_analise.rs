@@ -3,13 +3,13 @@ use axum::{
     http::StatusCode,
     response::IntoResponse,
 };
-use serde_json::{json};
+use serde_json::json;
 use crate::mvc::models::analise::model_analise::{Analise, CreateAnalise};
 
 pub async fn criar_analise(
     Json(payload): Json<CreateAnalise>,
 ) -> impl IntoResponse {
-    let analise = Analise::new(payload);
+    let analise: Analise = Analise::new(payload);
     
     (StatusCode::CREATED, Json(json!({
         "message": "Análise criada com sucesso",
@@ -18,9 +18,10 @@ pub async fn criar_analise(
 }
 
 pub async fn listar_analises() -> impl IntoResponse {
-    let analises = Analise::listar();
+    let analises: Vec<Analise> = Analise::listar();
     
-    print!("Buscou as análises!");
+    println!("Buscou as análises");
+
     
     (StatusCode::OK, Json(json!({
         "data": analises
