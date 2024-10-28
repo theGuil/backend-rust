@@ -10,4 +10,5 @@ pub fn create_routes() -> Router {
         .route("/analises", post(ControllerAnalise::criar_analise))
         .route("/analises/:id", get(ControllerAnalise::obter_analise))
         .route("/teste", get(ControllerAnalise::testar_rota))
+        .route("/teste1", get(ControllerAnalise::testar_rota1))
 }

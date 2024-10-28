@@ -58,4 +58,17 @@ impl ControllerAnalise {
             }
         })))
     }
+
+    // função para testar uma nova rota
+    pub async  fn testar_rota1() -> impl IntoResponse {
+        
+        (StatusCode::OK, Json(json!({
+            "data": {
+                "analises": {
+                    "id": 122,
+                    "nome": "Guilherme de Souza"
+                }
+            }
+        })))
+    }
 }
