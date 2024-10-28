@@ -1,6 +1,14 @@
 
 mod server;
 
+pub mod helpers {
+    pub mod mysql {
+        pub mod helpers_mysql;
+    }
+    pub mod response {
+        pub mod helpers_response;
+    }
+}
 pub mod mvc {
     pub mod models {
         pub mod analise {
@@ -18,6 +26,7 @@ pub mod mvc {
         }
     }
 }
+
 
 #[tokio::main]
 async fn main() {
