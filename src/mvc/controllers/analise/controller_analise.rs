@@ -12,10 +12,10 @@ impl ControllerAnalise {
     pub async fn criar_analise(Json(payload): Json<CreateAnalise>,) -> impl IntoResponse {
         let analise: Analise = Analise::new(payload);
         
-        (StatusCode::CREATED, Json(json!({
+        return  (StatusCode::CREATED, Json(json!({
             "message": "Análise criada com sucesso",
             "data": analise
-        })))
+        })));
     }
     
     pub async fn listar_analises() -> impl IntoResponse {
@@ -24,13 +24,15 @@ impl ControllerAnalise {
         println!("Buscou as análises");
     
         
-        (StatusCode::OK, Json(json!({
+        return (StatusCode::OK, Json(json!({
             "data": analises
-        })))
+        })));
     }
 
     pub async fn obter_analise(_id: String) -> impl IntoResponse {
-        match Analise::buscar_por_id(_id) {
+
+
+       return  match Analise::buscar_por_id(_id) {
             Some(analise) => (
                 StatusCode::OK,
                 Json(json!({
@@ -43,32 +45,32 @@ impl ControllerAnalise {
                     "error": "Análise não encontrada"
                 }))
             )
-        }
+        };
     }
 
     // função para testar uma nova rota
-    pub async  fn testar_rota() -> impl IntoResponse {
+    pub async fn testar_rota() -> impl IntoResponse {
         
-        (StatusCode::OK, Json(json!({
+       return (StatusCode::OK, Json(json!({
             "data": {
                 "analises": {
                     "id": 122,
                     "nome": "Guilherme de Souza"
                 }
             }
-        })))
+        })));
     }
 
     // função para testar uma nova rota
     pub async  fn testar_rota1() -> impl IntoResponse {
         
-        (StatusCode::OK, Json(json!({
+       return (StatusCode::OK, Json(json!({
             "data": {
                 "analises": {
                     "id": 122,
                     "nome": "Guilherme de Souza"
                 }
             }
-        })))
+        })));
     }
 }
