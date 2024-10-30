@@ -36,7 +36,13 @@ impl Analise {
     }
     
     pub fn buscar_por_id(_id: String) -> Option<Analise> {
-        // Aqui você implementaria a lógica para buscar do banco de dados
-        None
+        // Aqui você implementaria a lógica para buscar a análise do banco de dados
+        Some(Analise {
+            id: _id,
+            titulo: "Análise Exemplo".to_string(),
+            descricao: "Descrição da análise".to_string(),
+            status: "pendente".to_string(),
+            created_at: "2024-10-22T12:34:56Z".to_string(),
+        })
     }
 }
