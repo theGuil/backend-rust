@@ -4,13 +4,15 @@ use axum::{
     response::IntoResponse,
 };
 use serde_json::json;
-use crate::mvc::models::analise::model_analise::{Analise, CreateAnalise};
+use crate::mvc::models::analise::model_analise::{ModelAnalise, ModelCreateAnalise};
 
+//HELPERS
+use crate::helpers::response::helpers_response::HelpersResponse;
 pub struct ControllerAnalise;
 
 impl ControllerAnalise {
-    pub async fn criar_analise(Json(payload): Json<CreateAnalise>,) -> impl IntoResponse {
-        let analise: Analise = Analise::new(payload);
+    pub async fn criar_analise(Json(payload): Json<ModelCreateAnalise>,) -> impl IntoResponse {
+        let analise: ModelAnalise = ModelAnalise::new(payload);
         
         return  (StatusCode::CREATED, Json(json!({
             "message": "Análise criada com sucesso",
@@ -19,7 +21,7 @@ impl ControllerAnalise {
     }
     
     pub async fn listar_analises() -> impl IntoResponse {
-        let analises: Vec<Analise> = Analise::listar();
+        let analises: Vec<ModelAnalise> = ModelAnalise::listar();
         
         println!("Buscou as análises");
     
@@ -32,7 +34,7 @@ impl ControllerAnalise {
     pub async fn obter_analise(_id: String) -> impl IntoResponse {
 
 
-       return  match Analise::buscar_por_id(_id) {
+       return  match ModelAnalise::buscar_por_id(_id) {
             Some(analise) => (
                 StatusCode::OK,
                 Json(json!({
@@ -49,16 +51,11 @@ impl ControllerAnalise {
     }
 
     // função para testar uma nova rota
-    pub async fn testar_rota() -> impl IntoResponse {
+    pub async fn testar_rota(_id: String) -> impl IntoResponse {
         
-       return (StatusCode::OK, Json(json!({
-            "data": {
-                "analises": {
-                    "id": 122,
-                    "nome": "Guilherme de Souza"
-                }
-            }
-        })));
+        let analise: Option<ModelAnalise> = ModelAnalise::buscar_por_id(_id);
+
+        return HelpersResponse::not_found(analise)
     }
 
     // função para testar uma nova rota
@@ -67,7 +64,7 @@ impl ControllerAnalise {
        return (StatusCode::OK, Json(json!({
             "data": {
                 "analises": {
-                    "id": 122,
+                    "id": 007,
                     "nome": "Guilherme de Souza"
                 }
             }

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct Analise {
+pub struct ModelAnalise {
     pub id: String,
     pub titulo: String,
     pub descricao: String,
@@ -11,13 +11,13 @@ pub struct Analise {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct CreateAnalise {
+pub struct ModelCreateAnalise {
     pub titulo: String,
     pub descricao: String,
 }
 
-impl Analise {
-    pub fn new(payload: CreateAnalise) -> Self {
+impl ModelAnalise {
+    pub fn new(payload: ModelCreateAnalise) -> Self {
         let now: chrono::DateTime<chrono::Local> = chrono::Local::now();
         
         Self {
@@ -29,15 +29,15 @@ impl Analise {
         }
     }
     
-    pub fn listar() -> Vec<Analise> {
+    pub fn listar() -> Vec<ModelAnalise> {
         // Aqui você implementaria a lógica para buscar do banco de dados
         print!("Passou dentro da análise!");
         vec![]
     }
     
-    pub fn buscar_por_id(_id: String) -> Option<Analise> {
+    pub fn buscar_por_id(_id: String) -> Option<ModelAnalise> {
         // Aqui você implementaria a lógica para buscar a análise do banco de dados
-        Some(Analise {
+        Some(ModelAnalise {
             id: _id,
             titulo: "Análise Exemplo".to_string(),
             descricao: "Descrição da análise".to_string(),
