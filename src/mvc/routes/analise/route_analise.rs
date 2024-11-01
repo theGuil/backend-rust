@@ -1,7 +1,4 @@
-use axum::{
-    routing::{get, post},
-    Router,
-};
+use axum::{routing::{get, post},Router};
 use crate::mvc::controllers::analise::controller_analise::ControllerAnalise;
 
 pub fn create_routes() -> Router {

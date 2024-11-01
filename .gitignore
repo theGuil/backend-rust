@@ -13,3 +13,6 @@ Cargo.lock
 
 # Arquivos de debug
 *.pdb
+
+# envs
+.env
