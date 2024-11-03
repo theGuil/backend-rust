@@ -38,9 +38,14 @@ impl HelperMysql {
         &self.pool
     }
 
-    // Função para executar queries no banco de dados
-    pub async fn execute_query(&self,query: &str,) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
-        
+    // Função estática (não precisa de self)
+    pub async fn execute_static_query(query: &str) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
+        let db = Self::new().await?;
+        sqlx::query(query).execute(&db.pool).await
+    }
+
+    // Função de instância (precisa de self)
+    pub async fn execute_query(&self, query: &str) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
         sqlx::query(query).execute(&self.pool).await
     }
 }
