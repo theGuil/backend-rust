@@ -51,7 +51,7 @@ impl ModelUsuario{
          
         // Agora pode usar execute_query com a instância (db)
         match helper_mysql::HelperMysql::execute_query(query).await {
-            Ok(_) => (StatusCode::OK, "Inserido com sucesso").into_response(),
+            Ok(_) => (StatusCode::OK, Json(data)).into_response(),
             Err(e) => {
                 println!("Erro ao inserir: {:?}", e);
                 (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao inserir").into_response()

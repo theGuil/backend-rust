@@ -17,7 +17,7 @@ pub struct ControllerUsuario;
 impl ControllerUsuario {
     pub async fn register_usuario(Json(usuario): Json<UsuarioRequest>) -> impl IntoResponse {
    
-        ModelUsuario::inserir_usuario(Json(usuario)).await;
+        ModelUsuario::inserir_usuario(Json(usuario)).await
 
         //(StatusCode::OK, Json(usuario))
     }
