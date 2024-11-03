@@ -1,6 +1,5 @@
 //BIBLIOTECAS
 use serde::{Deserialize, Serialize};
-use sqlx;
 use axum::{extract::Json,response::IntoResponse, http::StatusCode};
 //HELPERS
 use crate::helpers::mysql::helper_mysql::{self};
