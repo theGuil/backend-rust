@@ -1,5 +1,6 @@
 //BIBLIOTECAS
 use serde::{Deserialize, Serialize};
+use sqlx;
 use axum::{extract::Json,response::IntoResponse, http::StatusCode};
 //HELPERS
 use crate::helpers::mysql::helper_mysql::{self};
@@ -26,21 +27,29 @@ impl ModelUsuario{
 
         print!("{}", data.usuario.email);
     
-        // Sua query
-        let query = "
+        let query: String = format!(
+            r#"
             INSERT INTO `user` 
-                (   user_status_id, 
+                (   
+                    user_status_id, 
                     user_nome, 
                     user_sobre_nome, 
                     user_email, 
                     user_senha
-                ) VALUES ('1', 
-                    'João', 
-                    'Silva', 
-                    'joao.silva@email.com', 
-                    'senha123'
-                )";
-    
+                ) VALUES (
+                    '1',
+                    '{nome}',
+                    '{sobre_nome}',
+                    '{email}',
+                    '{senha}'
+                )
+            "#,
+            nome = data.usuario.nome,
+            sobre_nome = "Silva",
+            email = data.usuario.email,
+            senha = "senha123"
+        );
+         
         // Agora pode usar execute_query com a instância (db)
         match helper_mysql::HelperMysql::execute_query(query).await {
             Ok(_) => (StatusCode::OK, "Inserido com sucesso").into_response(),

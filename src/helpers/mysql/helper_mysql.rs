@@ -44,9 +44,9 @@ impl HelperMysql {
         DB_POOL.get()
     }
 
-    pub async fn execute_query(query: &str) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
+    pub async fn execute_query<T: AsRef<str>>(query: T) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
         let instance = Self::get_instance()
             .expect("Database not initialized");
-        sqlx::query(query).execute(&instance.pool).await
+        sqlx::query(query.as_ref()).execute(&instance.pool).await
     }
 }
