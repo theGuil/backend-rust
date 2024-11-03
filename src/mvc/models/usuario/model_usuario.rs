@@ -1,29 +1,39 @@
 // src/mvc/models/usuario/model_usuario.rs
-use crate::helpers::mysql::helpers_mysql::HelperMysql;
+//use crate::helpers::mysql::helpers_mysql::HelperMysql;
+use serde::{Deserialize, Serialize};
+use axum::Json;
 
-pub struct ModelUsuario<'a> {
-    helper_mysql: &'a HelperMysql, // Referência ao HelperMysql
+//use crate::mvc::controllers::usuario;
+
+pub struct ModelUsuario;
+
+// Struct interna para os dados do usuário
+#[derive(Debug, Deserialize, Serialize)]
+pub struct Usuario {
+    nome: String,
+    email: String,
 }
 
-impl<'a> ModelUsuario<'a> {
-    // Método de criação do ModelUsuario com uma referência ao HelperMysql
-    pub fn new(helper_mysql: &'a HelperMysql) -> Self {
-        Self { helper_mysql }
-    }
+// Struct principal que contém o objeto usuario
+#[derive(Debug, Deserialize, Serialize)]
+pub struct UsuarioRequest {
+    usuario: Usuario,
+}
+
+
+impl ModelUsuario{
+
 
     // Função para inserir um usuário no banco de dados usando execute_query
-    pub async fn inserir_usuario(&self, nome: &str, email: &str) -> Result<(), sqlx::Error> {
+    pub async fn inserir_usuario(Json(data): Json<UsuarioRequest>)  {
         // Monta a query SQL com parâmetros
-        let query = "INSERT INTO usuarios (nome, email) VALUES (?, ?)";
+        //let query = "INSERT INTO usuarios (nome, email) VALUES (?, ?)";
 
-        // Executa a query usando execute_query do HelperMysql
-        let result = sqlx::query(query)
-            .bind(nome)
-            .bind(email)
-            .execute(self.helper_mysql.get_pool())
-            .await?;
 
-        println!("Usuário inserido com sucesso, linhas afetadas: {}", result.rows_affected());
-        Ok(())
+
+        println!("passou para inserir o usuário com mysql, {:?}", data.usuario.email)
+
+
+   
     }
 }

@@ -3,7 +3,7 @@ mod server;
 
 pub mod helpers {
     pub mod mysql {
-        pub mod helpers_mysql;
+        pub mod helper_mysql;
     }
     pub mod response {
         pub mod helpers_response;
@@ -37,7 +37,7 @@ pub mod mvc {
 }
 
 //IMPORTAÇÕES
-use crate::helpers::mysql::helpers_mysql::HelperMysql;
+use crate::helpers::mysql::helper_mysql::HelperMysql;
 
 #[tokio::main]
 async fn main() {
