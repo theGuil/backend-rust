@@ -37,7 +37,7 @@ pub mod mvc {
 }
 
 //IMPORTAÇÕES
-use crate::helpers::mysql::helper_mysql::{self};
+use crate::helpers::mysql::helper_mysql::HelperPostgreSql;
 
 #[tokio::main]
 async fn main() {
@@ -46,7 +46,7 @@ async fn main() {
     println!("Servidor rodando em http://0.0.0.0:3000");
     
 
-    match helper_mysql::HelperMysql::init().await {
+    match HelperPostgreSql::init().await {
         Ok(_helper) => {
             println!("Conexão com o banco de dados estabelecida com sucesso!");
 

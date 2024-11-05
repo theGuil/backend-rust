@@ -1,35 +1,28 @@
-use sqlx::{MySql, MySqlPool, Pool};
+use sqlx::{postgres::PgPool, Pool, Postgres, postgres::PgConnectOptions};
 use dotenv::dotenv;
 use std::env;
 use once_cell::sync::OnceCell;
 use std::sync::Arc;
 
-static DB_POOL: OnceCell<Arc<HelperMysql>> = OnceCell::new();
+static DB_POOL: OnceCell<Arc<HelperPostgreSql>> = OnceCell::new();
 
-// Adicione o derive Debug aqui
 #[derive(Debug)]
-pub struct HelperMysql {
-    pool: Pool<MySql>,
+pub struct HelperPostgreSql {
+    pool: Pool<Postgres>,
 }
 
-impl HelperMysql {
+impl HelperPostgreSql {
     pub async fn new() -> Result<Self, sqlx::Error> {
         dotenv().ok();
 
-        let host: String = env::var("CONN_DB_HOST").expect("CONN_DB_HOST não configurada");
-        let username: String = env::var("CONN_DB_USERNAME").expect("CONN_DB_USERNAME não configurada");
-        let schema: String = env::var("CONN_DB_SCHEMA").expect("CONN_DB_SCHEMA não configurada");
-        let password: String = env::var("CONN_DB_PASS").expect("CONN_DB_PASS não configurada");
+        let options = PgConnectOptions::new()
+        .host(&env::var("CONN_DB_HOST").expect("CONN_DB_HOST não configurada"))
+        .port(env::var("CONN_DB_PORT").expect("CONN_DB_PORT não configurada").parse().unwrap())
+        .username(&env::var("CONN_DB_USERNAME").expect("CONN_DB_USERNAME não configurada"))
+        .password(&env::var("CONN_DB_PASS").expect("CONN_DB_PASS não configurada"))
+        .database(&env::var("CONN_DB_SCHEMA").expect("CONN_DB_SCHEMA não configurada"));
 
-        let port_str = env::var("CONN_DB_PORT").expect("CONN_DB_PORT não configurada");
-        println!("Valor da porta (string): {}", port_str);
-        let port: u16 = port_str.parse().expect("CONN_DB_PORT deve ser um número válido");
-        println!("Valor da porta (u16): {}", port);
-
-        let database_url: String = format!("mysql://{}:{}@{}:{}/{}", username, password, host, port, schema);
-        println!("URL de conexão: {}", database_url);
-
-        let pool: Pool<MySql> = MySqlPool::connect(&database_url).await?;
+        let pool = PgPool::connect_with(options).await?;
         Ok(Self { pool })
     }
 
@@ -40,13 +33,25 @@ impl HelperMysql {
         Ok(())
     }
 
-    pub fn get_instance() -> Option<&'static Arc<HelperMysql>> {
+    pub fn get_instance() -> Option<&'static Arc<HelperPostgreSql>> {
         DB_POOL.get()
     }
 
-    pub async fn execute_query<T: AsRef<str>>(query: T) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
+    pub async fn execute_query<T: AsRef<str>>(query: T) -> Result<sqlx::postgres::PgQueryResult, sqlx::Error> {
         let instance = Self::get_instance()
             .expect("Database not initialized");
         sqlx::query(query.as_ref()).execute(&instance.pool).await
+    }
+
+    // Método adicional para queries com retorno
+    pub async fn query<T>(query: &str) -> Result<Vec<T>, sqlx::Error>
+    where
+        T: for<'r> sqlx::FromRow<'r, sqlx::postgres::PgRow> + Send + Unpin,
+    {
+        let instance = Self::get_instance()
+            .expect("Database not initialized");
+        sqlx::query_as(query)
+            .fetch_all(&instance.pool)
+            .await
     }
 }

@@ -15,9 +15,11 @@ pub struct ControllerUsuario;
 
 
 impl ControllerUsuario {
-    pub async fn register_usuario(Json(usuario): Json<UsuarioRequest>) -> impl IntoResponse {
-   
-        ModelUsuario::inserir_usuario(Json(usuario)).await
+    pub async fn register_usuario(Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
+        
+        //ModelUsuario::verificar_email_existe(&data.usuario.email).await;
+
+        ModelUsuario::inserir_usuario(Json(data)).await
 
         //(StatusCode::OK, Json(usuario))
     }

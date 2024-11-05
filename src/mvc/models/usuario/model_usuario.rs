@@ -2,59 +2,67 @@
 use serde::{Deserialize, Serialize};
 use axum::{extract::Json,response::IntoResponse, http::StatusCode};
 //HELPERS
-use crate::helpers::mysql::helper_mysql::{self};
+use crate::helpers::mysql::helper_mysql::HelperPostgreSql;
 
 pub struct ModelUsuario;
 
-// Struct interna para os dados do usuário
-#[derive(Debug, Deserialize, Serialize)]
-pub struct Usuario {
-    nome: String,
-    email: String,
+// Definição das structs para referência
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UsuarioRequest {
+    pub usuario: Usuario
 }
 
-// Struct principal que contém o objeto usuario
-#[derive(Debug, Deserialize, Serialize)]
-pub struct UsuarioRequest {
-    usuario: Usuario,
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Usuario {
+    pub nome: String,
+    pub email: String
+    // outros campos...
 }
+
 
 
 impl ModelUsuario{
 
     pub async fn inserir_usuario(Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
 
-        print!("{}", data.usuario.email);
-    
         let query: String = format!(
-            r#"
-            INSERT INTO `user` 
-                (   
-                    user_status_id, 
-                    user_nome, 
-                    user_sobre_nome, 
-                    user_email, 
-                    user_senha
-                ) VALUES (
-                    '1',
-                    '{nome}',
-                    '{sobre_nome}',
-                    '{email}',
-                    '{senha}'
-                )
-            "#,
-            nome = data.usuario.nome,
-            sobre_nome = "Silva",
-            email = data.usuario.email,
-            senha = "senha123"
+            "INSERT INTO usuario (usuario_status_id, usuario_nome, usuario_sobre_nome, usuario_email, usuario_senha) 
+             VALUES ('1', '{}', '{}', '{}', '{}')",
+            data.usuario.nome,
+            "Silva",
+            data.usuario.email,
+            "senha123"
         );
          
         // Agora pode usar execute_query com a instância (db)
-        match helper_mysql::HelperMysql::execute_query(query).await {
-            Ok(_) => (StatusCode::OK, Json(data)).into_response(),
+        match HelperPostgreSql::execute_query(query).await {
+            Ok(_) => {
+
+    
+                (StatusCode::CREATED, Json(data)).into_response()
+            },
             Err(e) => {
                 println!("Erro ao inserir: {:?}", e);
                 (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao inserir").into_response()
+            }
+        }
+    }
+
+    pub async fn verificar_email_existe(email: &String) -> impl IntoResponse {
+        let query = format!("
+            SELECT 
+                * 
+            FROM usuario 
+            WHERE usuario_email = '{}'
+        ",
+            email
+        );
+    
+        match HelperPostgreSql::execute_query(query).await {
+            Ok(_) => (StatusCode::OK, Json("Sucesso ao buscar e-mail")).into_response(),
+            Err(e) => {
+                println!("Erro ao buscar usuário: {:?}", e);
+                (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao buscar").into_response()
             }
         }
     }
