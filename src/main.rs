@@ -11,25 +11,17 @@ pub mod helpers {
 }
 pub mod mvc {
     pub mod models {
-        pub mod analise {
-            pub mod model_analise;
-        }
+
         pub mod usuario {
             pub mod model_usuario;
         }
     }
     pub mod controllers {
-        pub mod analise {
-            pub mod controller_analise;
-        }
         pub mod usuario {
             pub mod controller_usuario;
         }
     }
     pub mod routes {
-        pub mod analise {
-            pub mod route_analise;
-        }
         pub mod usuario {
             pub mod route_usuario;
         }
