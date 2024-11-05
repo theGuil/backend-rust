@@ -15,7 +15,8 @@ pub struct UsuarioRequest {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Usuario {
     pub nome: String,
-    pub email: String
+    pub email: String,
+    pub senha: String
     // outros campos...
 }
 
@@ -23,7 +24,7 @@ pub struct Usuario {
 
 impl ModelUsuario{
 
-    pub async fn inserir_usuario(Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
+    pub async fn inserir_usuario(data: Json<UsuarioRequest>) -> impl IntoResponse {
 
         let query: String = format!(
             "INSERT INTO usuario (usuario_status_id, usuario_nome, usuario_sobre_nome, usuario_email, usuario_senha) 
@@ -39,7 +40,7 @@ impl ModelUsuario{
             Ok(_) => {
 
     
-                (StatusCode::CREATED, Json(data)).into_response()
+                (StatusCode::CREATED, data).into_response()
             },
             Err(e) => {
                 println!("Erro ao inserir: {:?}", e);
