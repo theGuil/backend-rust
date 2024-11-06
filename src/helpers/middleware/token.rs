@@ -24,8 +24,9 @@ pub struct HelperMiddlewareToken {
 }
 
 impl HelperMiddlewareToken {
+    
     pub fn new(secret: &[u8]) -> Self {
-        println!("secretsecretsecretsecret, {:?}", secret);
+        println!("new secret, {:?}", secret);
         Self {
             encoding_key: EncodingKey::from_secret(secret),
             decoding_key: DecodingKey::from_secret(secret),
@@ -65,11 +66,8 @@ impl HelperMiddlewareToken {
             ).into_response()
         }
     }
-    pub async fn verify_token(
-        &self,
-        mut req: Request<Body>,
-        next: Next,
-    ) -> Response {
+
+    pub async fn verify_token(&self,mut req: Request<Body>,next: Next,) -> Response {
 // Primeiro, obtenha o valor do cabeçalho Authorization
         let auth_header = req
             .headers()
