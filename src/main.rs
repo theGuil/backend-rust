@@ -5,6 +5,9 @@ pub mod helpers {
     pub mod mysql {
         pub mod helper_mysql;
     }
+    pub mod middleware {
+        pub mod token;
+    }
     pub mod response {
         pub mod helpers_response;
     }

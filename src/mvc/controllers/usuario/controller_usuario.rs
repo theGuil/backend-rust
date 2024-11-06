@@ -1,26 +1,57 @@
-use axum::{extract::Json,response::IntoResponse};
-
-
-//HELPERS
-//use crate::helpers::mysql::helper_mysql::HelperMysql;
-//MODELS
-use crate::mvc::models::usuario::model_usuario::{ModelUsuario, UsuarioRequest};
-
-
-
-
+use axum::{
+    response::IntoResponse,
+    Json,
+    Extension,
+    http::StatusCode,
+};
+use serde_json::json;
+use crate::{
+    helpers::middleware::token::{Claims, HelperMiddlewareToken},
+    mvc::models::usuario::model_usuario::UsuarioRequest,
+};
 
 pub struct ControllerUsuario;
 
-
-
 impl ControllerUsuario {
-    pub async fn register_usuario(data: Json<UsuarioRequest>) -> impl IntoResponse {
+    pub async fn login(
+        Json(usuario): Json<UsuarioRequest>
+    ) -> impl IntoResponse {
+        let secret = b"sua_chave_secreta";
+        let auth = HelperMiddlewareToken::new(secret);
         
-        ModelUsuario::verificar_email_existe(&data.usuario.email).await;
+        auth.create_token(Json(usuario)).await
+    }
 
-        ModelUsuario::inserir_usuario(data).await
 
-        //(StatusCode::OK, Json(usuario))
+    pub async fn register_usuario() -> impl IntoResponse {
+        // Implementação temporária
+        (
+            StatusCode::CREATED,
+            Json(json!({
+                "message": "Usuário registrado"
+            }))
+        )
+    }
+
+    pub async fn get_perfil(Extension(claims): Extension<Claims>,Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
+        // Agora você tem acesso às claims e aos dados do request
+        (
+            StatusCode::OK,
+            Json(json!({
+                "user_id": claims.sub,
+                "data": data
+            }))
+        )
+    }
+
+
+    pub async fn update_usuario(Extension(claims): Extension<Claims>) -> impl IntoResponse {
+        (
+            StatusCode::OK,
+            Json(json!({
+                "user_id": claims.sub,
+                "message": "Usuário atualizado"
+            }))
+        )
     }
 }
