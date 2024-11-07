@@ -13,11 +13,9 @@ use crate::{
 pub struct ControllerUsuario;
 
 impl ControllerUsuario {
-    pub async fn login(
-        Json(usuario): Json<UsuarioRequest>
-    ) -> impl IntoResponse {
-        let secret = b"sua_chave_secreta";
-        let auth = HelperMiddlewareToken::new(secret);
+    pub async fn login(Json(usuario): Json<UsuarioRequest>) -> impl IntoResponse {
+
+        let auth: HelperMiddlewareToken = HelperMiddlewareToken::new();
         
         auth.create_token(Json(usuario)).await
     }

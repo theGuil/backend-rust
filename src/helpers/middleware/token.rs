@@ -5,6 +5,7 @@ use axum::{
     response::{Response, IntoResponse},
     Json
 };
+
 use serde::{Deserialize, Serialize};
 use jsonwebtoken::{decode,encode,Header, DecodingKey, EncodingKey,  Validation};
 use serde_json::json;
@@ -25,8 +26,8 @@ pub struct HelperMiddlewareToken {
 
 impl HelperMiddlewareToken {
     
-    pub fn new(secret: &[u8]) -> Self {
-        println!("new secret, {:?}", secret);
+    pub fn new() -> Self {
+        let secret: &[u8; 17] = b"!25#r$9634A85$236";
         Self {
             encoding_key: EncodingKey::from_secret(secret),
             decoding_key: DecodingKey::from_secret(secret),

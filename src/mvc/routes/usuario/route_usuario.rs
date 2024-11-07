@@ -15,12 +15,9 @@ use crate::{
 };
 
 // Middleware de autenticação
-async fn auth_middleware(
-    req: Request<Body>,
-    next: Next,
-) -> Response {
-    let secret: &[u8; 17] = b"sua_chave_secreta";
-    let auth = HelperMiddlewareToken::new(secret);
+async fn auth_middleware(req: Request<Body>,next: Next) -> Response {
+
+    let auth: HelperMiddlewareToken = HelperMiddlewareToken::new();
     auth.verify_token(req, next).await
 }
 
