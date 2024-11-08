@@ -66,10 +66,10 @@ impl ModelUsuario{
 
        match HelperPostgreSql::execute_query(query).await {
             Ok(results) => {
-               return  HelpersResponse::success("Query executed successfully")
+                 HelpersResponse::success("Query executed successfully").into_response()
             }
             Err(e) =>{ 
-                return  HelpersResponse::success("Query executed successfully")
+                  HelpersResponse::success("Query executed successfully").into_response()
             },
         }
 

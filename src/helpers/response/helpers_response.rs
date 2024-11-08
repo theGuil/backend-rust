@@ -1,4 +1,4 @@
-use axum::{http::StatusCode, response::{IntoResponse,Json}};
+use axum::{http::StatusCode, response::{IntoResponse,Json, Response}};
 use serde::Serialize;
 use serde_json::json;
 //use serde_json::Value;
@@ -14,7 +14,7 @@ struct Responses {
 }
 
 impl HelpersResponse {
-    pub fn success(message: &str) -> impl IntoResponse {
+    pub fn success(message: &str) ->  Response {
        (
             StatusCode::OK,
             Json(json!({
@@ -22,17 +22,18 @@ impl HelpersResponse {
                 "type": "success",
                 "message": message
             }))
-        )
+        ).into_response()
     }
 
-    pub fn error(message: &str) -> impl IntoResponse {
-       return  (
+    pub fn error(message: &str) ->  Response {
+         (
             StatusCode::INTERNAL_SERVER_ERROR,
             Json(json!({
                 "code": "ERROR",
                 "type": "error",
                 "message": message
             }))
-        )
+        ).into_response()
     }
+    
 }

@@ -11,6 +11,7 @@ use jsonwebtoken::{decode,encode,Header, DecodingKey, EncodingKey,  Validation};
 use serde_json::json;
 use chrono::{Duration, Utc};
 use crate::mvc::models::usuario::model_usuario::UsuarioRequest;
+use crate::helpers::response::helpers_response::HelpersResponse;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct Claims {
@@ -50,15 +51,9 @@ impl HelperMiddlewareToken {
             &claims, 
             &self.encoding_key
         ) {
-            Ok(token) => (
-                StatusCode::OK,
-                Json(json!({
-                    "token": token,
-                    "email": usuario.usuario.email,
-                    "nome": usuario.usuario.nome,
-                    "message": "Token gerado com sucesso"
-                }))
-            ).into_response(),
+            Ok(token) => {
+                  HelpersResponse::success("Query executed successfully").into_response()
+            },
             Err(_) => (
                 StatusCode::INTERNAL_SERVER_ERROR,
                 Json(json!({

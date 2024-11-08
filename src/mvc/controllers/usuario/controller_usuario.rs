@@ -24,8 +24,8 @@ impl ControllerUsuario {
     pub async fn register_usuario(data: Json<UsuarioRequest>) -> impl IntoResponse {
         // Implementação temporária
         println!("passou para registrar");
-        ModelUsuario::verificar_email_existe(&data.usuario.email).await;
-        println!("passou para registrar 2");
+        ModelUsuario::verificar_email_existe(&data.usuario.email).await
+ 
 
     }
 
