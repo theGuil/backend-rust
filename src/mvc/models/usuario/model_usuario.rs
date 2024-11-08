@@ -1,9 +1,13 @@
 //BIBLIOTECAS
 use serde::{Deserialize, Serialize};
+
 use axum::{extract::Json,response::IntoResponse, http::StatusCode};
 //HELPERS
-use crate::helpers::mysql::helper_mysql::HelperPostgreSql;
-
+use crate::{
+    helpers::mysql::helper_mysql::HelperPostgreSql,
+    helpers::response::helpers_response::HelpersResponse
+    
+};
 pub struct ModelUsuario;
 
 // Definição das structs para referência
@@ -50,7 +54,7 @@ impl ModelUsuario{
     }
 
     pub async fn verificar_email_existe(email: &String) -> impl IntoResponse {
-        let query = format!("
+        let query: String = format!("
             SELECT 
                 * 
             FROM usuario 
@@ -59,12 +63,15 @@ impl ModelUsuario{
             email
         );
     
-        match HelperPostgreSql::execute_query(query).await {
-            Ok(_) => (StatusCode::OK, Json("Sucesso ao buscar e-mail")).into_response(),
-            Err(e) => {
-                println!("Erro ao buscar usuário: {:?}", e);
-                (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao buscar").into_response()
+
+       match HelperPostgreSql::execute_query(query).await {
+            Ok(results) => {
+               return  HelpersResponse::success("Query executed successfully")
             }
+            Err(e) =>{ 
+                return  HelpersResponse::success("Query executed successfully")
+            },
         }
+
     }
 }

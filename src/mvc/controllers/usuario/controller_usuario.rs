@@ -7,28 +7,26 @@ use axum::{
 use serde_json::json;
 use crate::{
     helpers::middleware::token::{Claims, HelperMiddlewareToken},
-    mvc::models::usuario::model_usuario::UsuarioRequest,
+    mvc::models::usuario::model_usuario::{UsuarioRequest, ModelUsuario},
 };
 
 pub struct ControllerUsuario;
 
 impl ControllerUsuario {
-    pub async fn login(Json(usuario): Json<UsuarioRequest>) -> impl IntoResponse {
+    pub async fn login(Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
 
         let auth: HelperMiddlewareToken = HelperMiddlewareToken::new();
         
-        auth.create_token(Json(usuario)).await
+        auth.create_token(Json(data)).await
     }
 
 
-    pub async fn register_usuario() -> impl IntoResponse {
+    pub async fn register_usuario(data: Json<UsuarioRequest>) -> impl IntoResponse {
         // Implementação temporária
-        (
-            StatusCode::CREATED,
-            Json(json!({
-                "message": "Usuário registrado"
-            }))
-        )
+        println!("passou para registrar");
+        ModelUsuario::verificar_email_existe(&data.usuario.email).await;
+        println!("passou para registrar 2");
+
     }
 
     pub async fn get_perfil(Extension(claims): Extension<Claims>,Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
