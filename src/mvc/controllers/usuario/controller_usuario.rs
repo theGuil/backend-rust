@@ -8,6 +8,7 @@ use serde_json::json;
 use crate::{
     helpers::middleware::token::{Claims, HelperMiddlewareToken},
     mvc::models::usuario::model_usuario::{UsuarioRequest, ModelUsuario},
+    helpers::response::helpers_response::HelpersResponse
 };
 
 pub struct ControllerUsuario;
@@ -21,12 +22,13 @@ impl ControllerUsuario {
     }
 
 
-    pub async fn register_usuario(data: Json<UsuarioRequest>) -> impl IntoResponse {
-        // Implementação temporária
-        println!("passou para registrar");
-        ModelUsuario::verificar_email_existe(&data.usuario.email).await
- 
 
+
+    pub async fn register_usuario(data: Json<UsuarioRequest>) -> impl IntoResponse {
+
+         ModelUsuario::verificar_email_existe(&data.usuario.email).await;
+
+       return   ModelUsuario::inserir_usuario(data).await;
     }
 
     pub async fn get_perfil(Extension(claims): Extension<Claims>,Json(data): Json<UsuarioRequest>) -> impl IntoResponse {

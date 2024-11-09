@@ -47,8 +47,7 @@ impl ModelUsuario{
                 (StatusCode::CREATED, data).into_response()
             },
             Err(e) => {
-                println!("Erro ao inserir: {:?}", e);
-                (StatusCode::INTERNAL_SERVER_ERROR, "Erro ao inserir").into_response()
+                return HelpersResponse::error("Erro ao inserir usuário");
             }
         }
     }
@@ -66,10 +65,17 @@ impl ModelUsuario{
 
        match HelperPostgreSql::execute_query(query).await {
             Ok(results) => {
-                 HelpersResponse::success("Query executed successfully").into_response()
+                if results.rows_affected() == 0 {
+                    println!("Nenhum registro encontrado");
+                    return   HelpersResponse::success("Nenhum registro encontrado").into_response()
+                  
+                } else {
+                    return   HelpersResponse::success("007").into_response()
+                }
+                
             }
             Err(e) =>{ 
-                  HelpersResponse::success("Query executed successfully").into_response()
+                return   HelpersResponse::success("Query executed successfully").into_response()
             },
         }
 
