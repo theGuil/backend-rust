@@ -1,17 +1,17 @@
 use axum::{http::StatusCode, response::{IntoResponse,Json, Response}};
-use serde::Serialize;
+// use serde::Serialize;
 use serde_json::json;
 //use serde_json::Value;
 
 pub struct HelpersResponse;
 
-#[derive(Serialize)]
-struct Responses {
-    code: &'static str,
-    r#type: &'static str,
-    message: String,
-    //results: Option<Value>,
-}
+//#[derive(Serialize)]
+// struct Responses {
+//     code: &'static str,
+//     r#type: &'static str,
+//     message: String,
+//     //results: Option<Value>,
+// }
 
 impl HelpersResponse {
     pub fn success(message: &str) ->  Response {

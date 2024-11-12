@@ -46,7 +46,8 @@ impl ModelUsuario{
     
                 (StatusCode::CREATED, data).into_response()
             },
-            Err(e) => {
+            Err(_e) => {
+ 
                 return HelpersResponse::error("Erro ao inserir usuário");
             }
         }
@@ -74,7 +75,7 @@ impl ModelUsuario{
                 }
                 
             }
-            Err(e) =>{ 
+            Err(_e) =>{ 
                 return   HelpersResponse::success("Query executed successfully").into_response()
             },
         }

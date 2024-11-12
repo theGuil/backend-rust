@@ -51,7 +51,7 @@ impl HelperMiddlewareToken {
             &claims, 
             &self.encoding_key
         ) {
-            Ok(token) => {
+            Ok(_token) => {
                   HelpersResponse::success("Query executed successfully").into_response()
             },
             Err(_) => (
