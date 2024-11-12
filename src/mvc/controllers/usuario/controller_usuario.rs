@@ -4,7 +4,7 @@ use axum::{
     Extension,
     http::StatusCode,
 };
-use serde_json::json;
+use serde_json::{json,Value};
 use crate::{
     helpers::middleware::token::{Claims, HelperMiddlewareToken},
     mvc::models::usuario::model_usuario::{UsuarioRequest, ModelUsuario},
@@ -12,6 +12,8 @@ use crate::{
 };
 
 pub struct ControllerUsuario;
+
+
 
 impl ControllerUsuario {
     pub async fn login(Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
@@ -24,13 +26,14 @@ impl ControllerUsuario {
 
 
 
-    pub async fn register_usuario(data: Json<UsuarioRequest>) -> impl IntoResponse {
+    pub async fn register_usuario(data: Json<UsuarioRequest>) -> Result<impl IntoResponse, (StatusCode, Json<Value>)> { 
+        ModelUsuario::verificar_email_existe(&data.usuario.email).await?;
 
-         ModelUsuario::verificar_email_existe(&data.usuario.email).await;
-
-       return   ModelUsuario::inserir_usuario(data).await;
+        println!("passou aqui");
+        Ok(ModelUsuario::inserir_usuario(data).await)
     }
 
+    
     pub async fn get_perfil(Extension(claims): Extension<Claims>,Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
         // Agora você tem acesso às claims e aos dados do request
         (
