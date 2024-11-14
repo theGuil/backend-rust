@@ -1,28 +1,34 @@
-use sqlx::{postgres::PgPool, Pool, Postgres, postgres::PgConnectOptions};
+use sqlx::{mysql::MySqlPool, Pool, MySql, mysql::MySqlConnectOptions};
 use dotenv::dotenv;
 use std::env;
 use once_cell::sync::OnceCell;
 use std::sync::Arc;
 
-static DB_POOL: OnceCell<Arc<HelperPostgreSql>> = OnceCell::new();
+static DB_POOL: OnceCell<Arc<HelperMySql>> = OnceCell::new();
 
 #[derive(Debug)]
-pub struct HelperPostgreSql {
-    pool: Pool<Postgres>,
+pub struct HelperMySql {
+    pool: Pool<MySql>,
 }
 
-impl HelperPostgreSql {
+impl HelperMySql {
     pub async fn new() -> Result<Self, sqlx::Error> {
         dotenv().ok();
 
-        let options = PgConnectOptions::new()
-        .host(&env::var("CONN_DB_HOST").expect("CONN_DB_HOST não configurada"))
-        .port(env::var("CONN_DB_PORT").expect("CONN_DB_PORT não configurada").parse().unwrap())
-        .username(&env::var("CONN_DB_USERNAME").expect("CONN_DB_USERNAME não configurada"))
-        .password(&env::var("CONN_DB_PASS").expect("CONN_DB_PASS não configurada"))
-        .database(&env::var("CONN_DB_SCHEMA").expect("CONN_DB_SCHEMA não configurada"));
+        let host: String = env::var("MYSQL_CONN_DB_HOST").expect("MYSQL_CONN_DB_HOST não configurada");
+        let username: String = env::var("MYSQL_CONN_DB_USERNAME").expect("MYSQL_CONN_DB_USERNAME não configurada");
+        let password: String = env::var("MYSQL_CONN_DB_PASSWORD").expect("MYSQL_CONN_DB_PASSWORD não configurada");
+        let database: String = env::var("MYSQL_CONN_DB_DATABASE").expect("MYSQL_CONN_DB_DATABASE não configurada");
+        let port: u16 = env::var("MYSQL_CONN_DB_PORT").expect("MYSQL_CONN_DB_PORT não configurada").parse().unwrap();
 
-        let pool = PgPool::connect_with(options).await?;
+        let options = MySqlConnectOptions::new()
+        .host(&host)
+        .username(&username)
+        .password(&password)
+        .database(&database)
+        .port(port);
+
+        let pool = MySqlPool::connect_with(options).await?;
         Ok(Self { pool })
     }
 
@@ -33,20 +39,19 @@ impl HelperPostgreSql {
         Ok(())
     }
 
-    pub fn get_instance() -> Option<&'static Arc<HelperPostgreSql>> {
+    pub fn get_instance() -> Option<&'static Arc<HelperMySql>> {
         DB_POOL.get()
     }
 
-    pub async fn execute_query<T: AsRef<str>>(query: T) -> Result<sqlx::postgres::PgQueryResult, sqlx::Error> {
+    pub async fn execute_query<T: AsRef<str>>(query: T) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
         let instance = Self::get_instance()
             .expect("Database not initialized");
         sqlx::query(query.as_ref()).execute(&instance.pool).await
     }
 
-    // Método adicional para queries com retorno
     pub async fn query<T>(query: &str) -> Result<Vec<T>, sqlx::Error>
     where
-        T: for<'r> sqlx::FromRow<'r, sqlx::postgres::PgRow> + Send + Unpin,
+        T: for<'r> sqlx::FromRow<'r, sqlx::mysql::MySqlRow> + Send + Unpin,
     {
         let instance = Self::get_instance()
             .expect("Database not initialized");
