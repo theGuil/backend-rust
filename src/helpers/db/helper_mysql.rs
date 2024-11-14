@@ -22,11 +22,11 @@ impl HelperMySql {
         let port: u16 = env::var("MYSQL_CONN_DB_PORT").expect("MYSQL_CONN_DB_PORT não configurada").parse().unwrap();
 
         let options = MySqlConnectOptions::new()
-        .host(&host)
-        .username(&username)
-        .password(&password)
-        .database(&database)
-        .port(port);
+            .host(&host)
+            .username(&username)
+            .password(&password)
+            .database(&database)
+            .port(port);
 
         let pool = MySqlPool::connect_with(options).await?;
         Ok(Self { pool })
@@ -43,12 +43,25 @@ impl HelperMySql {
         DB_POOL.get()
     }
 
+    // Método para SELECTs que retorna rows
+    pub async fn execute_select<T: AsRef<str>>(query: T) -> Result<Vec<sqlx::mysql::MySqlRow>, sqlx::Error> {
+        let instance = Self::get_instance()
+            .expect("Database not initialized");
+        sqlx::query(query.as_ref())
+            .fetch_all(&instance.pool)
+            .await
+    }
+
+    // Método para INSERT, UPDATE, DELETE que retorna apenas o resultado
     pub async fn execute_query<T: AsRef<str>>(query: T) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
         let instance = Self::get_instance()
             .expect("Database not initialized");
-        sqlx::query(query.as_ref()).execute(&instance.pool).await
+        sqlx::query(query.as_ref())
+            .execute(&instance.pool)
+            .await
     }
 
+    // Método para queries tipadas
     pub async fn query<T>(query: &str) -> Result<Vec<T>, sqlx::Error>
     where
         T: for<'r> sqlx::FromRow<'r, sqlx::mysql::MySqlRow> + Send + Unpin,
