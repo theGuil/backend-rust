@@ -2,8 +2,9 @@
 mod server;
 
 pub mod helpers {
-    pub mod mysql {
+    pub mod db {
         pub mod helper_mysql;
+        pub mod helper_postgresql;
     }
     pub mod middleware {
         pub mod token;
@@ -32,7 +33,7 @@ pub mod mvc {
 }
 
 //IMPORTAÇÕES
-use crate::helpers::mysql::helper_mysql::HelperPostgreSql;
+use crate::helpers::db::helper_mysql::HelperPostgreSql;
 
 #[tokio::main]
 async fn main() {

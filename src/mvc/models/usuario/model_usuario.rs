@@ -5,7 +5,7 @@ use serde_json::{json, Value};
 use axum::{extract::Json,response::{IntoResponse, Response}, http::StatusCode};
 //HELPERS
 use crate::{
-    helpers::mysql::helper_mysql::HelperPostgreSql,
+    helpers::db::helper_mysql::HelperPostgreSql,
     helpers::response::helpers_response::HelpersResponse
     
 };
