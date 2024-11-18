@@ -25,7 +25,8 @@ pub fn create_routes() -> Router {
     // Rotas públicas (sem middleware)
     let public_routes = Router::new()
         .route("/analises",  get(ControllerAnalise::buscar_todas_analises))
-        .route("/analises/:id",  get(ControllerAnalise::get_analise_by_id));
+        .route("/analises/:id",  get(ControllerAnalise::get_analise_by_id))
+        .route("/analises/imobiliaria/:id", get(ControllerAnalise::get_analises_by_imob_id));
        
 
     // Combinar rotas

@@ -9,6 +9,7 @@ use crate::helpers::cache::helper_cache::HelperCache;
 struct CartaFianca {
     // Add fields based on your VW_CARTAFIANCA view structure
     id: i32,
+    imob_id: i32,
     contrato: String
     // ... other fields
 }
@@ -41,6 +42,7 @@ impl ModelAnalise {
                     .map(|row| {
                         json!({
                             "id": row.get::<i32, _>("id"),
+                            "imob_id": row.get::<i32, _>("imob_id"),
                             "contrato": row.get::<String, _>("contrato"),
                         })
                     })
@@ -102,7 +104,8 @@ impl ModelAnalise {
                         .map(|row| {
                             json!({
                                 "id": row.get::<i32, _>("id"),
-                                "contrato": row.get::<String, _>("contrato")
+                                "contrato": row.get::<String, _>("contrato"),
+                                "imob_id": row.get::<Option<i32>, _>("imob_id")
                             })
                         })
                         .collect();
@@ -144,5 +147,74 @@ impl ModelAnalise {
                 "message": format!("Análise com ID {} não encontrada", id)
             }))
         ))
+    }
+
+    pub async fn buscar_analises_by_imob_id(imob_id: &str) -> Result<Json<Value>, (StatusCode, Json<Value>)> {
+        // Inicializa o cache
+        HelperCache::initialize();
+    
+        // Tenta buscar do cache primeiro
+        if let Some(cached_data) = HelperCache::get_cartafianca_by_imob_id(imob_id) {
+            return Ok(Json(json!({
+                "status": true,
+                "message": "Dados da imobiliária recuperados do cache",
+                "data": cached_data,
+                "cached": true
+            })));
+        }
+    
+        // Se não estiver no cache, busca do banco
+        let query: &str = "SELECT * FROM VW_CARTAFIANCA_GERAL";
+        
+        match HelperMySql::execute_select(query).await {
+            Ok(results) => {
+                let dados: Vec<Value> = results
+                    .iter()
+                    .map(|row| {
+                        json!({
+                            "id": row.get::<i32, _>("id"),
+                            "contrato": row.get::<String, _>("contrato"),
+                            "imob_id": row.get::<Option<i32>, _>("imob_id"),
+                            // ... outros campos
+                        })
+                    })
+                    .collect();
+    
+                // Salva no cache
+                if let Err(e) = HelperCache::set_json_cartafianca(json!(dados)) {
+                    println!("Erro ao salvar no cache: {}", e);
+                }
+    
+                // Tenta buscar novamente do cache
+                if let Some(imob_data) = HelperCache::get_cartafianca_by_imob_id(imob_id) {
+                    return Ok(Json(json!({
+                        "status": true,
+                        "message": "Dados da imobiliária recuperados do banco",
+                        "data": imob_data,
+                        "cached": false
+                    })));
+                }
+    
+                // Se não encontrou dados para esta imobiliária
+                Err((
+                    StatusCode::NOT_FOUND,
+                    Json(json!({
+                        "status": false,
+                        "message": format!("Nenhum dado encontrado para a imobiliária {}", imob_id)
+                    }))
+                ))
+            }
+            Err(e) => {
+                println!("Erro: {:?}", e);
+                Err((
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    Json(json!({
+                        "status": false,
+                        "message": "Erro ao realizar consulta",
+                        "error": e.to_string()
+                    }))
+                ))
+            }
+        }
     }
 }
