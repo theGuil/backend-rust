@@ -1,4 +1,4 @@
-use sqlx::{mysql::MySqlPool, Pool, MySql, mysql::MySqlConnectOptions};
+use sqlx::{mysql::{MySqlPool, MySqlQueryResult}, Pool, MySql, mysql::MySqlConnectOptions};
 use dotenv::dotenv;
 use std::env;
 use once_cell::sync::OnceCell;
@@ -45,20 +45,23 @@ impl HelperMySql {
 
     // Método para SELECTs que retorna rows
     pub async fn execute_select<T: AsRef<str>>(query: T) -> Result<Vec<sqlx::mysql::MySqlRow>, sqlx::Error> {
-        let instance = Self::get_instance()
-            .expect("Database not initialized");
-        sqlx::query(query.as_ref())
-            .fetch_all(&instance.pool)
-            .await
+        let instance = Self::get_instance().expect("Database not initialized");
+        return  sqlx::query(query.as_ref()).fetch_all(&instance.pool).await
     }
 
     // Método para INSERT, UPDATE, DELETE que retorna apenas o resultado
-    pub async fn execute_query<T: AsRef<str>>(query: T) -> Result<sqlx::mysql::MySqlQueryResult, sqlx::Error> {
-        let instance = Self::get_instance()
-            .expect("Database not initialized");
-        sqlx::query(query.as_ref())
+    pub async fn execute_query<T: AsRef<str>>(query: T) -> Result<MySqlQueryResult, sqlx::Error> {
+        let instance = Self::get_instance().expect("Database not initialized");
+    
+        let result = sqlx::query(query.as_ref())
             .execute(&instance.pool)
-            .await
+            .await?;
+        
+        // Imprime os detalhes do resultado
+        println!("Rows afetadas: {}", result.rows_affected());
+        println!("Último ID inserido: {:?}", result.last_insert_id());
+        
+        Ok(result)
     }
 
     // Método para queries tipadas

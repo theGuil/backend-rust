@@ -24,7 +24,8 @@ use crate::{
 pub fn create_routes() -> Router {
     // Rotas públicas (sem middleware)
     let public_routes = Router::new()
-        .route("/analises",  get(ControllerAnalise::buscar_todas_analises));
+        .route("/analises",  get(ControllerAnalise::buscar_todas_analises))
+        .route("/analises/:id",  get(ControllerAnalise::get_analise_by_id));
        
 
     // Combinar rotas
