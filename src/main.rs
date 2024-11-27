@@ -24,6 +24,9 @@ pub mod mvc {
         pub mod analise {
             pub mod model_analise;
         }
+        pub mod locatario {
+            pub mod model_locatario;
+        }
     }
     pub mod controllers {
         pub mod usuario {
@@ -31,6 +34,9 @@ pub mod mvc {
         }
         pub mod analise {
             pub mod controller_analise;
+        }
+        pub mod locatario {
+            pub mod controller_locatario;
         }
     }
     pub mod routes {

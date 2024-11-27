@@ -23,7 +23,7 @@ aplicativo do servidor onda segura
 
 git init
 git add .
-git commit -m ":sparkles: feat: Adiciona servidor rust funcionando no padrão MVC"
+git commit -m ":sparkles: feat: Adiciona controller, model, struct da tabela onda_locatario" 
 git push -u origin producao
 
 ########################################### .ENV WHATSAPP ############################################
