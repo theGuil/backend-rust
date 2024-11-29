@@ -9,7 +9,6 @@ use crate::helpers::cache::helper_cache::HelperCache;
 struct CartaFianca {
     // Add fields based on your VW_CARTAFIANCA view structure
     id: i32,
-    imob_id: i32,
     contrato: String
     // ... other fields
 }
@@ -42,7 +41,6 @@ impl ModelAnalise {
                     .map(|row| {
                         json!({
                             "id": row.get::<i32, _>("id"),
-                            "imob_id": row.get::<i32, _>("imob_id"),
                             "contrato": row.get::<String, _>("contrato"),
                         })
                     })
