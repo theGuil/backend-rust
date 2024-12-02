@@ -98,6 +98,53 @@ pub mod model_locatario {
             }
         }
     }
+
+    pub async  fn buscar_locatarios() -> Result<Json<Value>, (StatusCode, Json<Value>)>  {
+        
+        let query: &str = "SLECT  FROM  onda_locatario";
+
+        match HelperMySql::execute_select(query).await {
+            Ok(results) => {
+
+                let dados: Vec<Value> = results
+                    .iter()
+                    .map(|row| {
+                        json!({
+                            "onda_locatario_id": row.get::<i32, _>("onda_locatario_id"),
+                            "onda_locatario_codigo": row.get::<String, _>("onda_locatario_codigo"),
+                            "onda_locatario_cnpjcpf": row.get::<String, _>("onda_locatario_cnpjcpf"),
+
+                        })
+                    })
+                    .collect();
+    
+                let response_data = json!({
+                    "status": true,
+                    "message": "Sucesso ao buscar locatários",
+                    "data": dados,
+                    "cached": false
+                });
+    
+                // Salva no cache
+                if let Err(e) = HelperCache::set_json_cartafianca(json!(dados)) {
+                    println!("Erro ao salvar no cache: {}", e);
+                }
+    
+                Ok(Json(response_data))
+            }
+            Err(e) => {
+                println!("Erro: {:?}", e);
+                Err((
+                    StatusCode::INTERNAL_SERVER_ERROR,
+                    Json(json!({
+                        "status": false,
+                        "message": "Erro ao realizar consulta",
+                        "error": e.to_string()
+                    }))
+                ))
+            }
+        }
+    }
 }
 
 
