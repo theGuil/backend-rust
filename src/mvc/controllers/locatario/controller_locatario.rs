@@ -14,6 +14,6 @@ pub mod controller_locatario {
     }
 
     pub async  fn buscar_locatario() -> impl IntoResponse {
-        model_locatario::cadastrar_locatario().await
+        model_locatario::buscar_locatarios().await
     }
 }

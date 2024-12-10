@@ -47,7 +47,7 @@ pub mod mvc {
             pub mod route_analise;
         }
         pub mod locatario {
-            
+            pub mod route_locatario;
         }
     }
 }

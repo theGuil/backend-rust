@@ -101,7 +101,7 @@ pub mod model_locatario {
 
     pub async  fn buscar_locatarios() -> Result<Json<Value>, (StatusCode, Json<Value>)>  {
         
-        let query: &str = "SLECT  FROM  onda_locatario";
+        let query: &str = "SELECT * FROM  onda_locatario";
 
         match HelperMySql::execute_select(query).await {
             Ok(results) => {
