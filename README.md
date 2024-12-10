@@ -23,7 +23,7 @@ aplicativo do servidor onda segura
 
 git init
 git add .
-git commit -m ":sparkles: feat: Adiciona controller, model, struct da tabela onda_locatario" 
+git commit -m ":sparkles: feat: Adiciona "
 git push -u origin producao
 
 ########################################### .ENV WHATSAPP ############################################
