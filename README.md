@@ -23,7 +23,7 @@ aplicativo do servidor onda segura
 
 git init
 git add .
-git commit -m ":sparkles: feat: Adiciona busca de locatario pelo documento sem precisar de map para construir as rows"
+git commit -m ":sparkles: feat: Adiciona "
 git push -u origin producao
 
 ########################################### .ENV WHATSAPP ############################################
