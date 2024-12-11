@@ -1,6 +1,6 @@
 use axum::{
     extract::Path,
-    response::IntoResponse,
+    //response::IntoResponse,
     Json,
     http::StatusCode,
 };
@@ -10,7 +10,7 @@ use serde_json::Value;
 
 use crate::mvc::models::analise::model_analise::ModelAnalise;
 // use crate::helpers::response::helpers_response::HelpersResponse;
-use crate::mvc::models::locatario::model_locatario::model_locatario;
+
 pub struct ControllerAnalise;
 
 pub struct Teste {
@@ -19,9 +19,9 @@ pub struct Teste {
 
 
 impl ControllerAnalise {
-    pub async fn buscar_todas_analises() -> impl IntoResponse {
+    pub async fn buscar_todas_analises()  {
         
-        model_locatario::buscar_locatario().await
+       
     }
 
     pub async fn get_analise_by_id(Path(id): Path<String>) -> Result<Json<Value>, (StatusCode, Json<Value>)> {
