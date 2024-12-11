@@ -39,14 +39,14 @@ pub struct Locatario {
     // pub onda_locatario_status: i32,
 }
 
+
+
 pub mod model_locatario {
     //use sqlx::mysql::MySqlRow;
     use serde_json::{json, Value};
     use axum::{extract::Json, http::StatusCode};
     //HELPERS
     use crate::helpers::db::helper_mysql::HelperMySql;
-
-
     use super::Locatario;
 
     pub async fn cadastrar_locatario() {
@@ -91,7 +91,6 @@ pub mod model_locatario {
                     "status": true,
                     "message": "Sucesso ao buscar locatário pelo documento",
                     "data": locatarios,
-                    "cached": false
                 })))
             }
             Err(e) => {
@@ -107,5 +106,3 @@ pub mod model_locatario {
         }
     }
 }
-
-
