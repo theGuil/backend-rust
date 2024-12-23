@@ -2,14 +2,13 @@
 
 
 pub mod controller_locatario {
-    use axum::{extract::Path,response::IntoResponse};
+    use axum::{extract::{Path, Json},response::IntoResponse};
     use crate::mvc::models::locatario::model_locatario::model_locatario;
 
-    pub async fn cadastrar_locatario() -> impl IntoResponse  {
-        println!("Passou para cadastrar o locatário");
-        let id: String = "Teste".to_string();        
-
-        model_locatario::Locatario::cadastrar_locatario(id).await;
+    pub async fn cadastrar_locatario(Json(payload): Json<model_locatario::Locatario>) -> impl IntoResponse  {
+    
+      
+        model_locatario::Locatario::cadastrar_locatario(payload).await
         
     }
 
