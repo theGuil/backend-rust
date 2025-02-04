@@ -15,6 +15,9 @@ pub mod helpers {
     pub mod cache {
         pub mod helper_cache;
     }
+    pub mod geral {
+        pub mod helpers_geral;
+    }
 }
 pub mod mvc {
     pub mod models {
@@ -38,6 +41,9 @@ pub mod mvc {
         pub mod locatario {
             pub mod controller_locatario;
         }
+        pub mod testes {
+            pub mod controller_testes;
+        }
     }
     pub mod routes {
         pub mod usuario {
@@ -48,6 +54,9 @@ pub mod mvc {
         }
         pub mod locatario {
             pub mod route_locatario;
+        }
+        pub mod testes {
+            pub mod route_testes;
         }
     }
 }

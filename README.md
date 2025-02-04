@@ -26,6 +26,10 @@ git add .
 git commit -m ":sparkles: feat: Adiciona "
 git push -u origin producao
 
+# START PROJETO
+
+cargo watch -x run
+
 ########################################### .ENV WHATSAPP ############################################
 
 # Your WhatsApp phone number Id (sender).

@@ -3,6 +3,7 @@ use axum::Router;
 use crate::mvc::routes::usuario::route_usuario;
 use crate::mvc::routes::analise::route_analise;
 use crate::mvc::routes::locatario::route_locatario;
+use crate::mvc::routes::testes::route_testes;
 
 // // Rotas REST padrão
 // router.get('/usuarios')     // Listar
@@ -20,6 +21,7 @@ pub async fn create_app() -> Router {
         .nest("/usuario", route_usuario::create_routes())
         .nest("/", route_analise::create_routes())
         .nest("/", route_locatario::create_routes())
+        .nest("/", route_testes::create_routes())
 }
 
 
