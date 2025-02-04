@@ -19,9 +19,9 @@ pub struct Teste {
 
 
 impl ControllerAnalise {
-    pub async fn buscar_todas_analises()  {
+    pub async fn buscar_todas_analises() -> Result<Json<Value>, (StatusCode, Json<Value>)> {
         
-       
+       ModelAnalise::buscar_totas_analises().await
     }
 
     pub async fn get_analise_by_id(Path(id): Path<String>) -> Result<Json<Value>, (StatusCode, Json<Value>)> {
