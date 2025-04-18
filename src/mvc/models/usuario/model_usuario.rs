@@ -48,10 +48,19 @@ impl ModelUsuario{
     pub async fn inserir_usuario(data: Json<UsuarioRequest>) -> impl IntoResponse {
 
         let query: String = format!(
-            "INSERT INTO usuario (usuario_status_id, usuario_nome, usuario_sobre_nome, usuario_email, usuario_senha) 
-             VALUES ('1', '{}', '{}', '{}', '{}')",
+            "INSERT INTO usuario (
+                status_id, 
+                nome,
+                email, 
+                senha
+                ) 
+             VALUES (
+                '1',
+                '{}', 
+                '{}',
+                '{}'
+            )",
             data.usuario.nome,
-            "Silva",
             data.usuario.email,
             "senha123"
         );
@@ -64,7 +73,7 @@ impl ModelUsuario{
                 (StatusCode::CREATED, data).into_response()
             },
             Err(_e) => {
-
+                println!("passou aqui {}", _e);
                 return HelpersResponse::error("Erro ao inserir usuário").into_response();
             }
         }
@@ -72,7 +81,7 @@ impl ModelUsuario{
 
     pub async fn verificar_email_existe(email: &String) -> Result<(), (StatusCode, Json<Value>)> {
         let query = format!(
-            "SELECT * FROM usuario WHERE usuario_email = '{}'",
+            "SELECT * FROM usuario WHERE email = '{}'",
             email
         );
 
@@ -93,12 +102,13 @@ impl ModelUsuario{
                 }
             }
             Err(_e) => {
-                // Se der erro na consulta
+   
+                println!("passou aqui {}", _e);
                 Err((
                     StatusCode::INTERNAL_SERVER_ERROR,
                     Json(json!({
                         "status": false,
-                        "message": "Erro ao verificar email"
+                        "message": "Erro ao verificar email",
                     }))
                 ))
             }

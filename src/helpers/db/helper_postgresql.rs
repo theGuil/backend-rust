@@ -1,5 +1,5 @@
 use sqlx::{postgres::PgPool, Pool, Postgres, postgres::PgConnectOptions};
-use dotenv::dotenv;
+use dotenv;
 use std::env;
 use once_cell::sync::OnceCell;
 use std::sync::Arc;
@@ -13,7 +13,7 @@ pub struct HelperPostgreSql {
 
 impl HelperPostgreSql {
     pub async fn new() -> Result<Self, sqlx::Error> {
-        dotenv().ok();
+        dotenv::from_filename(".env.local").ok();
 
         let options = PgConnectOptions::new()
         .host(&env::var("CONN_DB_HOST").expect("CONN_DB_HOST não configurada"))

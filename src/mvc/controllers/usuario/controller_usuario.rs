@@ -17,7 +17,8 @@ pub struct ControllerUsuario;
 
 impl ControllerUsuario {
     pub async fn login(Json(data): Json<UsuarioRequest>) -> impl IntoResponse {
-
+        println!("passou aqui 1");
+        
         let auth: HelperMiddlewareToken = HelperMiddlewareToken::new();
         
         auth.create_token(Json(data)).await
@@ -27,6 +28,7 @@ impl ControllerUsuario {
 
 
     pub async fn register_usuario(data: Json<UsuarioRequest>) -> Result<impl IntoResponse, (StatusCode, Json<Value>)> { 
+        print!("passou aqui 2");
         ModelUsuario::verificar_email_existe(&data.usuario.email).await?;
 
         println!("passou aqui");

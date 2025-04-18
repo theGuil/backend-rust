@@ -62,7 +62,8 @@ pub mod mvc {
 }
 
 //IMPORTAÇÕES
-use crate::helpers::db::helper_mysql::HelperMySql;
+use crate::helpers::db::helper_postgresql::HelperPostgreSql;
+
 
 #[tokio::main]
 async fn main() {
@@ -71,16 +72,9 @@ async fn main() {
     println!("Servidor rodando em http://0.0.0.0:3000");
     
 
-    match HelperMySql::init().await {
-        Ok(_helper) => {
-            println!("MYSQL -Conexão com o banco de dados estabelecida com sucesso!");
-
-            // Aqui você pode usar o helper para executar consultas
-            // Exemplo: let result = helper.execute_query("SELECT * FROM tabela").await;
-        }
-        Err(e) => {
-            eprintln!("MYSQL - Erro ao conectar ao banco de dados: {}", e);
-        }
+    match HelperPostgreSql::init().await {
+        Ok(_helper) => println!("MYSQL -Conexão com o banco de dados estabelecida com sucesso!"),
+        Err(e) => eprintln!("MYSQL - Erro ao conectar ao banco de dados: {}", e),
     };
 
    
